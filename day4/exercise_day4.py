@@ -1,6 +1,6 @@
 import os
 import warnings
-import webbrowser
+import sh
 
 
 class Song(object):
@@ -32,8 +32,7 @@ class Song(object):
 	def play(self):
 		"""Open a youtube search for the title of the song """
 		url = 'https://www.youtube.com/results?search_query=%s' % (self.title.replace(" ", "+")) 
-		chrome_path = "/usr/bin/google-chrome-stable %s"
-		webbrowser.get(chrome_path).open(url)
+		sh.google_chrome(url)
 
 
 path = os.environ["HOME"]
