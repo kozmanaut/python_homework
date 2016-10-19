@@ -2,7 +2,7 @@ import os
 import warnings
 import sh
 
-
+################################################################################################
 class Song(object):
 	""" A class that describes musical songs """
 	
@@ -14,12 +14,12 @@ class Song(object):
 		try :
 			self.duration = int(duration)
 		except :
-			warnings.warn("Song duration was not a number - setting to 0")
+			warnings.warn("Duration of %s by %s was not a number - setting to 0" % (self.title, self.artist))
 			self.duration = 0
 			
 
 		if self.duration < 0 :
-			warnings.warn("Song duration is negative - setting to 0")
+			warnings.warn("Duration of %s by %s is negative - setting to 0" % (self.title, self.artist))
 			self.duration = 0 
 			
 
@@ -27,13 +27,14 @@ class Song(object):
 		"""Easily readable duration of songs """
 		min, sec = divmod(self.duration, 60)
 		hr, min = divmod(min, 60)
-		return "The duration of %s by %s is %d:%02d:%02d" % (self.title, self.artist, hr, min, sec)
+		return "The duration of %s by %s is %02i:%02i:%02i" % (self.title, self.artist, hr, min, sec)
 
 	def play(self):
 		"""Open a youtube search for the title of the song """
 		url = 'https://www.youtube.com/results?search_query=%s' % (self.title.replace(" ", "+")) 
 		sh.google_chrome(url)
 
+######################################################################################################
 
 path = os.environ["HOME"]
 infile = open(path+"/lulu_mix_16.csv", "r")
