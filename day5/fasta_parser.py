@@ -60,7 +60,7 @@ class FastaParser(object):
 		Input - 'path/to/figure.pdf'
 		"""
 
-		# split the input path in order to create the needed directories
+		# Split the input path in order to create the needed directories
 		tmp = path.rsplit('/', 1)
 		directory = tmp[0]
 		sh.mkdir("-p", directory)
@@ -70,7 +70,7 @@ class FastaParser(object):
 		for seq in self.sequence:
 			hist.append(len(seq))
 
-		# PLot the histogram using matplotlib.pyplot (plt) in the desired path
+		# Plot the histogram using matplotlib.pyplot (plt) in the desired path
 		plt.hist(hist, bins= 100, facecolor='grey', alpha=0.75 )
 		plt.xlabel('Length of sequence')
 		plt.ylabel('Number of sequences')
