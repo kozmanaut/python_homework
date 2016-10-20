@@ -60,7 +60,7 @@ class FastaParser(object):
 		Input - 'path/to/figure.pdf'
 		"""
 
-		# Split the input path in order to create the needed directories
+		# Split the input path in order to create the needed directory
 		tmp = path.rsplit('/', 1)
 		directory = tmp[0]
 		sh.mkdir("-p", directory)
