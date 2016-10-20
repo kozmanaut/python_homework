@@ -3,12 +3,13 @@ import matplotlib.pyplot as plt
 import sh
 
 class FastaParser(object):
+	"""Parser of a fasta file, with path to the file being the only input"""
 	def __init__(self, path):
 		self.path = path
 		if not os.path.exists(self.path):
 			raise IOError("File does not exist")
 
-		## Go line by line and create a list with the sequence names and another list of sequences
+		## Go line by line and create a list with the sequence names (seq_name) and another list of sequences themselves (seq_seq)
 		tmp = []
 		seq_name = []
 		seq_seq = []
@@ -24,7 +25,7 @@ class FastaParser(object):
 				seq_seq.append(''.join(tmp))
 		del seq_seq[0]
 
-		## Create a dictionary 
+		## Create a dictionary of sequence name (key) and the sequence (value)
 		seq_dict = {name : seq for name, seq in zip(seq_name, seq_seq)}
 		
 		## Create self object from these lists and dictionaries
@@ -34,15 +35,18 @@ class FastaParser(object):
 		self.count = len(self.sequence)
 
 	def __len__(self):
+		"""Length of the object: number of sequences"""
 		return self.count
 
 	def __getitem__(self, arg):
+		"""Allow indexing of the object list and the dictionary"""
 		if type(arg) == int:
 			return self.sequence[arg]
 		elif type(arg) == str:
 			return self.dict[arg]
 
 	def extract_length(self, length):
+		"""Function to exract sequences that are shorter than desired 'length' - the only input of this function"""
 		short = []
 		for seq in self.sequence:
 			if len(seq) < length:
@@ -50,6 +54,9 @@ class FastaParser(object):
 		return short
 
 	def length_dist(self, path):
+		"""A function that creates a histogram figure of the sequence length distribution.
+		Input - 'path/to/figure.pdf'	
+		"""
 		tmp = path.rsplit('/', 1)
 		directory = tmp[0]
 		sh.mkdir("-p", directory)
