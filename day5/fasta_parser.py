@@ -9,8 +9,8 @@ class FastaParser(object):
 		if not os.path.exists(self.path):
 			raise IOError("File does not exist")
 
-		## Go line by line and create a list with the sequence names (seq_name)
-		## and another list of sequences themselves (seq_seq)
+		# Go line by line and create a list with the sequence names (seq_name)
+		# and another list of sequences themselves (seq_seq)
 		tmp = []
 		seq_name = []
 		seq_seq = []
@@ -26,10 +26,10 @@ class FastaParser(object):
 				seq_seq.append(''.join(tmp))
 		del seq_seq[0]
 
-		## Create a dictionary of sequence name (key) and the sequence (value)
+		# Create a dictionary of sequence name (key) and the sequence (value)
 		seq_dict = {name : seq for name, seq in zip(seq_name, seq_seq)}
 
-		## Create self object from these lists and dictionaries
+		# Create self object from these lists and dictionaries
 		self.seq_name = seq_name
 		self.sequence = seq_seq
 		self.dict = seq_dict
@@ -41,9 +41,9 @@ class FastaParser(object):
 
 	def __getitem__(self, arg):
 		"""Allow indexing of the object list and the dictionary"""
-		if type(arg) == int:
+		if isinstance(arg, int) :
 			return self.sequence[arg]
-		elif type(arg) == str:
+		elif isinstance(arg, str):
 			return self.dict[arg]
 
 	def extract_length(self, length):
@@ -57,19 +57,20 @@ class FastaParser(object):
 
 	def length_dist(self, path):
 		"""A function that creates a histogram figure of the sequence length distribution.
-		Input - 'path/to/figure.pdf' """
+		Input - 'path/to/figure.pdf'
+		"""
 
-		## split the input path in order to create the needed directories
+		# split the input path in order to create the needed directories
 		tmp = path.rsplit('/', 1)
 		directory = tmp[0]
 		sh.mkdir("-p", directory)
 
-		## Create a list of sequence lengths
+		# Create a list of sequence lengths
 		hist = []
 		for seq in self.sequence:
 			hist.append(len(seq))
 
-		## PLot the histogram using matplotlib.pyplot (plt) in the desired path
+		# PLot the histogram using matplotlib.pyplot (plt) in the desired path
 		plt.hist(hist, bins= 100, facecolor='grey', alpha=0.75 )
 		plt.xlabel('Length of sequence')
 		plt.ylabel('Number of sequences')
