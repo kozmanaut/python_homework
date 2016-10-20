@@ -57,13 +57,13 @@ class FastaParser(object):
 		"""A function that creates a histogram figure of the sequence length distribution.
 		Input - 'path/to/figure.pdf'	
 		"""
-		tmp = path.rsplit('/', 1)
-		directory = tmp[0]
-		sh.mkdir("-p", directory)
+		tmp = path.rsplit('/', 1)		#split the path in order to create the needed directories
+		directory = tmp[0]				#extract just the parent directories
+		sh.mkdir("-p", directory)		#make the needed directories
 		
-		hist = []
-		for seq in self.sequence:
-			hist.append(len(seq))
+		hist = []						
+		for seq in self.sequence:		
+			hist.append(len(seq))		#create a list of sequence lengths
 
 		plt.hist(hist, bins= 100, facecolor='grey', alpha=0.75 )
 		plt.xlabel('Length of sequence')
