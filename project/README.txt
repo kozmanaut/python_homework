@@ -27,6 +27,6 @@ methods: run Raxml
 
 
 Class: Tree
-
-attributes: self
+	- use the Phylo module from Biopython
+attributes: self, path to .tre file
 methods: draw tree, (convert between formats?)
