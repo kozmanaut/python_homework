@@ -13,11 +13,20 @@ For names, have another input file with ind names
 Input: 	ANGSD genotype file
 Output: Phylo tree created from the Raxml .tre file
 
-Class: SNP
+Class: SNP/FASTA
 
 attributes: name, length (bp's), number of ind/seq's
+methods: parse genotype file and name file into combined Fasta file
+
+
+Class: Raxml_Runner 
+	- Use the Raxml wrapper available in BioPython
+
+attributes: Raxml path,  (options to run Raxml?)
+methods: run Raxml 
+
 
 Class: Tree
 
-attributes: branch names
-
+attributes: self
+methods: draw tree, (convert between formats?)
