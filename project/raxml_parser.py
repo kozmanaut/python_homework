@@ -32,8 +32,8 @@ except ImportError:
 #	'major' takes the first (major) base and 'random' picks a random base of the two.", type = str, default = 'random')
 #
 #args = parser.parse_args()
-
-#infle = args.input_file
+#
+#infile = args.input_file
 infile = "genotypes.subset.txt"
 
 #geno_method = args.genotype
@@ -52,35 +52,35 @@ class Genotype(object):
 		rows = []
 		with open(self.path, 'r') as data:
 			for line in data:
+				if "NN" in line: continue 	# remove a line (position) in which any genotype is NN
 				line = line.strip('\n').split('\t')
 				rows.append(line[4:-1])
 				num_ind =  len(line) - 5
-
 		geno = zip(*rows)
 		self.genotypes = geno
 		self.num_ind = num_ind
 
+	# Method that takes the 2 base genotypes and turns it into a single base genotype, depending on the option chosen
 	def single_base(self, option):
 		nc_dict = {
 			"AA" : "A", "CC" : "C", "TT" : "T", "GG" : "G",
 			"AC" : "M", "CA" : "M", "AT" : "W", "TA" : "W", "AG" : "R", "GA" : "R",
 			"CT" : "Y", "TC" : "Y", "CG" : "S", "GC" : "S",
 			"GT" : "K", "TG" : "K",
-			"NN" : "N"
-			}
-		if self.option == 'concat':
-			single_base = [tuple(nc_dict[x] for x in ind) for ind in self.genotypes]
-		elif self.option == 'major':
-			single_base = [tuple(x[0] for x in ind) for ind in self.genotypes]
-		elif self.option == 'random':
-			single_base = [tuple(random.choice(x) for x in ind) for ind in self.genotypes]
+			}		# IUPAC nucleotide codes
 
+		if option == 'concat':
+			single_base = [tuple(nc_dict[x] for x in ind) for ind in self.genotypes]
+		elif option == 'major':
+			single_base = [tuple(x[0] for x in ind) for ind in self.genotypes]
+		elif option == 'random':
+			single_base = [tuple(random.choice(x) for x in ind) for ind in self.genotypes]
 		self.snps = single_base
 
-
+class Alignment
 ###################################################################
 test = Genotype(infile)
-print test.num_ind
+#print test.num_ind
 #print test.genotypes
 
 
@@ -101,3 +101,5 @@ sin_bas3 = [tuple(random.choice(x) for x in ind) for ind in test.genotypes]
 #print sin_bas
 #print sin_bas2
 #print sin_bas3
+
+test.single_base(geno_method)
