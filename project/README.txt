@@ -4,7 +4,7 @@ ANGSD Genotype to Raxml parser
 
 name: raxml_parser
 
-What will it do: Take a genotype file created from ANGSD, clean it (remove any line that has NN), format it into a fasta file that will be used as input for Raxml.Use a Raxml wrapper to run Raxml locally. 
+What will it do: Take a genotype file created from ANGSD, clean it (remove any line that has NN), take an input argument to decide how to turn a 2 basepair genotype into 1 basebair genotype, format it into a fasta sequence file that will be used as input for Raxml. Use a Raxml wrapper to run Raxml locally. 
 
 For names, have another input file with ind names
 
@@ -16,7 +16,7 @@ Class Genotype()
 	SNP.single_2b_genotypes
 		Take each genotype (AA) of each individual and store it
 	SNP.create_1b_genotypes()
-		a method that will convert the genotype into IUPAC nt code using a dictionary
+		a method that will take an input argument and convert the genotype into: i) IUPAC nt code using a dictionary or ii) take the major allele or iii) take a random allele
 Class Alignment()
 	Alignemnt.sequences
 		A sequence of each individuals
