@@ -153,7 +153,8 @@ class Raxml_runner(object):
 	def __init__(self, in_fasta, model):
 		tmp = infile.rsplit('.', 1)
 		out_name = tmp[0] + '.' + geno_method
-		self.raxml_cline = "raxmlHPC-AVX -f a -x 12345 -p 12345 -# autoMRE -s " + in_fasta + " -m " + model + " -n " + out_name
+		self.raxml_cline = "raxmlHPC-AVX -f a -x 12345 -p 12345 -# autoMRE -s " + in_fasta + " -m " + model \
+		+ " -n " + out_name
 
 
 
