@@ -22,8 +22,6 @@ Class Alignment()
 		A sequence of each individuals
 	Alignment.add_SNP
 		a method that uses an object of class SNP to poopulate a sequences with one more position
-	Alignment.clean_N
-		method to remove any position across all individuals that has N
 	alignment.indnames()
 		method that uses an input file to create names for fasta file
 	Alingment_check_same_number_bases
