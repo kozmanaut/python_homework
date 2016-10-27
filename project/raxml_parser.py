@@ -1,18 +1,24 @@
 #!/usr/bin/env python
 
 """
-A parser for Raxml. The input is a genotype file produced in ANGSD, that has the genotypes of all individuals present on one line,
-separated by a tab. It will then create a fasta file, containing the concatenated sequence for each individual, across all individuals
-Raxml will then be run on the fasta file, using the Raxml wrapper in Biopython.
+A parser for Raxml. The input is a genotype file produced in ANGSD, that has the genotypes of all individuals present
+on one line per position, separated by a tab (first 4 columns = Chr, Position, Major allele, Minor allele). It will then create
+a fasta file, containing the concatenated sequence for each individual, across all individuals. The user can provide an
+optional argument that determines how the 2 bp genotype is converted to 1bp SNP - 'iupac', 'major' or 'random'.
+Another optional input argument is a file with individual id's - one id/name per line.
+Raxml will then be run on the fasta file. The user can provide the type of substitution model they wish to run
+(default = 'GTRGAMMA')
+
 
 Get RAxML from: https://github.com/stamatak/standard-RAxML
 Website with manual: http://sco.h-its.org/exelixis/web/software/raxml/index.html
+
 On Uppmax, load RAxMl with:
 $ module load bioinfo-tools
 $ module load raxml/8.2.4-gcc-mpi
 
 Command line usage:
-raxml_parser.py [optional: -g -i]  'input_file'
+raxml_parser.py [optional: -g -i -m ]  'input_file'
 
 """
 
@@ -34,10 +40,13 @@ except ImportError:
 #parser = argparse.ArgumentParser()
 #parser.add_argument("input_file", help = "Path to the genotype file", type = str)
 #
-#parser.add_argument("-g", "--genotype", help = "A method that takes the 2 basepair genotype and turns it into a single base pair \
-#	genotype. Options: 'iupac', 'major', 'random'. 'iupac' combines the two genotypes into IUPAC nucleotide code, \
+#parser.add_argument("-g", "--genotype", help = "A method that takes the 2 base pair genotype and turns it into a single \
+#	base pair genotype. Options: 'iupac', 'major', 'random'. 'iupac' combines the two genotypes into IUPAC nucleotide code, \
 #	'major' takes the first (major) base and 'random' picks a random base of the two.", type = str, default = 'random')
-#parser.add_argument("-i", "--id_file", help = "An optional input file containing the ID (names) of each individual on a single line", type = str)
+#parser.add_argument("-i", "--id_file", help = "An optional input file containing the ID (names) of each individual on a single \
+#	line", type = str)
+#parser.add_argument("-m", "--subtitutionModel", help = "The type of substitution model to use in the RAxML run. \
+#	See RAxML help page for all the possible models that can be run", type = str, default = 'GTRGAMMA')
 #
 #args = parser.parse_args()
 #
@@ -49,6 +58,9 @@ geno_method = 'major'
 
 #id_file = args.id_file
 id_file = "names.txt"
+
+#model = args.substitutionModel
+model = 'GTRGAMMA'
 
 ####################################################################
 class Geno_Snp(object):
@@ -128,7 +140,12 @@ class Fasta_builder(object):
 				print >> fasta_file, line
 
 class Raxml_runner(object):
-
+	"""
+	create a raxml command to then feed it into a method that runs it. Input args: name of input fasta file (in raxml = -s), the substitution
+	model to run (-m) and the output file name (-n). Type 'raxmlHPC-AVX -h' in a terminal for more information and help.
+	"""
+	def __init__(self, in_fasta, model, out_name):
+		raxml_cline = "raxmlHPC-AVX -f a -x 12345 -p 12345 -# autoMRE -s " + in_fasta + " -m " + model + " -n " + out_name
 
 ###################################################################
 data = Geno_Snp(infile)
