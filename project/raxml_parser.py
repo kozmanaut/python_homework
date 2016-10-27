@@ -146,8 +146,8 @@ class Fasta_builder(object):
 
 class Raxml_runner(object):
 	"""
-	Create a raxml command to then feed it into a method that runs it. Input args: name of input fasta file (in raxml = -s),
-	the substitution model to run (-m).
+	Create a raxml command to then feed it into a method that runs it. Input args: name of input fasta file
+	(in raxml = -s) and the substitution model to run (-m).
 	Type 'raxmlHPC-AVX -h' in a terminal for more information and help.
 	"""
 	def __init__(self, in_fasta, model):
