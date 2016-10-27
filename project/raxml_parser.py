@@ -75,7 +75,7 @@ class Geno_Snp(object):
 		rows = []
 		with open(self.path, 'r') as data:
 			for line in data:
-				# remove the whole line (position) in which any genotype is NN, otherwise continue on line 61
+				# remove the whole line (position) in which any genotype is NN, otherwise continue
 				if "NN" in line: continue
 				line = line.strip('\n').split('\t')
 				rows.append(line[4:-1])
@@ -104,7 +104,10 @@ class Geno_Snp(object):
 		self.snps = single_base
 
 class Fasta_builder(object):
-	"""Takes the 1 bp SNPs from class Geno_Snp, a list of names (given or made automatically) and builds a fasta file from these two items"""
+	"""
+	Takes the 1 bp SNPs from class Geno_Snp, a list of names (given or made automatically) and builds a
+	fasta file from these two items
+	"""
 	def __init__(self, snps):
 
 		# create a list of names
@@ -129,7 +132,8 @@ class Fasta_builder(object):
 		self.seq = seq
 
 		# make sure lengths of the names list and sequence list are the same
-		assert len(self.seq) == len(self.names), "Number of sequences is not the same as number of names provided!"
+		assert len(self.seq) == len(self.names), \
+		"Number of sequences is not the same as number of names provided!"
 
 		# Create a fasta list and output it to a file called the same as the input file, but with .fa extension
 		self.fasta = [x for y in zip(names, seq) for x in y]
@@ -138,16 +142,25 @@ class Fasta_builder(object):
 		with open(title, 'w') as fasta_file:
 			for line in self.fasta:
 				print >> fasta_file, line
+		self.title = title
 
 class Raxml_runner(object):
 	"""
-	create a raxml command to then feed it into a method that runs it. Input args: name of input fasta file (in raxml = -s), the substitution
-	model to run (-m) and the output file name (-n). Type 'raxmlHPC-AVX -h' in a terminal for more information and help.
+	Create a raxml command to then feed it into a method that runs it. Input args: name of input fasta file (in raxml = -s),
+	the substitution model to run (-m).
+	Type 'raxmlHPC-AVX -h' in a terminal for more information and help.
 	"""
-	def __init__(self, in_fasta, model, out_name):
-		raxml_cline = "raxmlHPC-AVX -f a -x 12345 -p 12345 -# autoMRE -s " + in_fasta + " -m " + model + " -n " + out_name
+	def __init__(self, in_fasta, model):
+		tmp = infile.rsplit('.', 1)
+		out_name = tmp[0] + '.' + geno_method
+		self.raxml_cline = "raxmlHPC-AVX -f a -x 12345 -p 12345 -# autoMRE -s " + in_fasta + " -m " + model + " -n " + out_name
+
+
 
 ###################################################################
 data = Geno_Snp(infile)
 data.single_base(geno_method)
 seq = Fasta_builder(data.snps)
+run = Raxml_runner(seq.title, model)
+print run.raxml_cline
+os.system(run.raxml_cline)
