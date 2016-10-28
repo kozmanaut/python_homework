@@ -19,11 +19,9 @@ $ module load raxml/8.2.4-gcc-mpi
 
 Command line usage:
 raxml_parser.py [optional: -g -i -m ]  'input_file'
-
 """
 
 import os
-import sh
 import matplotlib
 import matplotlib.pyplot as plt
 import argparse
@@ -144,24 +142,35 @@ class Fasta_builder(object):
 				print >> fasta_file, line
 		self.title = title
 
-class Raxml_runner(object):
+class Raxml_commander(object):
 	"""
-	Create a raxml command to then feed it into a method that runs it. Input args: name of input fasta file
-	(in raxml = -s) and the substitution model to run (-m).
-	Type 'raxmlHPC-AVX -h' in a terminal for more information and help.
+	Create a raxml command to then feed it to the run_raxml method that executes it. Input args: name of input fasta file
+	(in raxml = -s) and the substitution model to run (-m). Output file name is the same as the input file, without the last
+	extension. Type 'raxmlHPC-AVX -h' in a terminal for more information and help.
 	"""
 	def __init__(self, in_fasta, model):
 		tmp = infile.rsplit('.', 1)
 		out_name = tmp[0] + '.' + geno_method
-		self.raxml_cline = "raxmlHPC-AVX -f a -x 12345 -p 12345 -# autoMRE -s " + in_fasta + " -m " + model \
+		self.raxml_comm_line = "raxmlHPC-AVX -f a -x 12345 -p 12345 -# autoMRE -s " + in_fasta + " -m " + model \
 		+ " -n " + out_name
 
-
-
+	def run_raxml(self, comm_line):
+		"""Execute the raxml command"""
+		os.system(comm_line)
 ###################################################################
+
+#Load data into the Geno_Snp object
 data = Geno_Snp(infile)
+
+#Convert 2bp genotype to 1bp genotype using the selected 'geno_method'
 data.single_base(geno_method)
+
+#Build a fasta sequence using the above created snp's
 seq = Fasta_builder(data.snps)
-run = Raxml_runner(seq.title, model)
-print run.raxml_cline
-os.system(run.raxml_cline)
+
+#Create a raxml command
+run = Raxml_commander(seq.title, model)
+print run.raxml_comm_line
+
+#Run raxml
+run.run_raxml(run.raxml_comm_line)

@@ -4,38 +4,24 @@ ANGSD Genotype to Raxml parser
 
 name: raxml_parser
 
-What will it do: Take a genotype file created from ANGSD, clean it (remove any line that has NN), take an input argument to decide how to turn a 2 basepair genotype into 1 basebair genotype, format it into a fasta sequence file that will be used as input for Raxml. Use a Raxml wrapper to run Raxml locally. 
-
-For names, have another input file with ind names
-
-Input: 	ANGSD genotype file
-Output: Phylo tree created from the Raxml .tre file
-
-
-Class Genotype()
-	SNP.single_2b_genotypes
-		Take each genotype (AA) of each individual and store it
-	SNP.create_1b_genotypes()
-		a method that will take an input argument and convert the genotype into: i) IUPAC nt code using a dictionary or ii) take the major allele or iii) take a random allele
-Class Alignment()
-	Alignemnt.sequences
-		A sequence of each individuals
-	Alignment.add_SNP
-		a method that uses an object of class SNP to poopulate a sequences with one more position
-	alignment.indnames()
-		method that uses an input file to create names for fasta file
-	Alingment_check_same_number_bases
-		method that checks that each individuals has the same number of bases
-	alignment.to_fasta("filepath")
-		method that creates a fasta file with all the individuals
+A parser for Raxml. The input is a genotype file produced in ANGSD, that has the genotypes of all individuals present
+on one line per position, separated by a tab (first 4 columns = Chr, Position, Major allele, Minor allele). It will then create
+a fasta file, containing the concatenated sequence for each individual, across all individuals. The user can provide an
+optional argument that determines how the 2 bp genotype is converted to 1bp SNP - 'iupac', 'major' or 'random'.
+Another optional input argument is a file with individual id's - one id/name per line.
+Raxml will then be run on the fasta file. The user can provide the type of substitution model they wish to run
+(default = 'GTRGAMMA')
 
 
-Class: Raxml_Runner 
-	- Use the Raxml wrapper available in BioPython
+Get RAxML from: https://github.com/stamatak/standard-RAxML
+Website with manual: http://sco.h-its.org/exelixis/web/software/raxml/index.html
 
-attributes: Raxml path,  (options to run Raxml?)
-methods: run Raxml 
+On Uppmax, load RAxMl with:
+$ module load bioinfo-tools
+$ module load raxml/8.2.4-gcc-mpi
 
+Command line usage:
+raxml_parser.py [optional: -g -i -m ]  'input_file'
 
 Class: Tree
 	- use the Phylo module from Biopython
