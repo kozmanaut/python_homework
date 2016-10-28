@@ -95,10 +95,11 @@ class Geno_Snp(object):
 		# IUPAC nucleotide codes
 		nc_dict = {
 			"AA" : "A", "CC" : "C", "TT" : "T", "GG" : "G",
-			"AC" : "M", "CA" : "M", "AT" : "W", "TA" : "W", "AG" : "R", "GA" : "R",
-			"CT" : "Y", "TC" : "Y", "CG" : "S", "GC" : "S",
-			"GT" : "K", "TG" : "K",
+			"AC" : "M", "CA" : "M", "AT" : "W", "TA" : "W",
+			"AG" : "R", "GA" : "R", "CT" : "Y", "TC" : "Y",
+			"CG" : "S", "GC" : "S", "GT" : "K", "TG" : "K",
 			}
+
 		if option == 'iupac':
 			single_base = [tuple(nc_dict[x] for x in ind) for ind in self.genotypes]
 		elif option == 'major':
