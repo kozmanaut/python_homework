@@ -29,7 +29,6 @@ import random
 
 try:
 	from Bio import Phylo
-	from Bio.Phylo.Applications import RaxmlCommandline
 except ImportError:
 	raise "Biopython is required but it does not seem to be installed. Please install it."
 
