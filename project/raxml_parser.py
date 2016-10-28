@@ -4,7 +4,7 @@
 A parser for Raxml. The input is a genotype file produced in ANGSD, that has the genotypes of all individuals present
 on one line per position, separated by a tab (first 4 columns = Chr, Position, Major allele, Minor allele). It will then create
 a fasta file, containing the concatenated sequence for each individual, across all individuals. The user can provide an
-optional argument that determines how the 2 bp genotype is converted to 1bp SNP - 'iupac', 'major' or 'random'.
+optional argument that determines how the 2 bp genotype is converted to 1bp SNP - 'iupac', 'major' or 'random' (default = 'major').
 Another optional input argument is a file with individual id's - one id/name per line.
 Raxml will then be run on the fasta file. The user can provide the type of substitution model they wish to run
 (default = 'GTRGAMMA') and an optional name for the run.
