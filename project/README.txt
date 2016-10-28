@@ -23,10 +23,6 @@ $ module load raxml/8.2.4-gcc-mpi
 Command line usage:
 raxml_parser.py [optional: -g -i -m ]  'input_file'
 
-Class: Tree
-	- use the Phylo module from Biopython
-attributes: self, path to .tre file
-methods: draw tree, (convert between formats?)
 
 
 
