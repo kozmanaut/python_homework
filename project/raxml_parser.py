@@ -7,8 +7,9 @@ a fasta file, containing the concatenated sequence for each individual, across a
 optional argument that determines how the 2 bp genotype is converted to 1bp SNP - 'iupac', 'major' or 'random'.
 Another optional input argument is a file with individual id's - one id/name per line.
 Raxml will then be run on the fasta file. The user can provide the type of substitution model they wish to run
-(default = 'GTRGAMMA')
+(default = 'GTRGAMMA') and an optional name for the run.
 
+This parser works for the latest release of RAxML: v8.2.9.
 
 Get RAxML from: https://github.com/stamatak/standard-RAxML
 Website with manual: http://sco.h-its.org/exelixis/web/software/raxml/index.html
@@ -18,7 +19,7 @@ $ module load bioinfo-tools
 $ module load raxml/8.2.4-gcc-mpi
 
 Command line usage:
-raxml_parser.py [optional: -g -i -m ]  'input_file'
+raxml_parser.py [-h] (optional: [-g geno_method] [-i id_file] [-m subsitutionModel] [-r RAxML_run_name])  'input_file'
 """
 
 import os
@@ -32,32 +33,39 @@ try:
 except ImportError:
 	raise "Biopython is required but it does not seem to be installed. Please install it."
 
-####################################################################
+########################################################################
 """Parse arguments """
-#parser = argparse.ArgumentParser()
-#parser.add_argument("input_file", help = "Path to the genotype file", type = str)
-#
-#parser.add_argument("-g", "--genotype", help = "A method that takes the 2 base pair genotype and turns it into a single \
-#	base pair genotype. Options: 'iupac', 'major', 'random'. 'iupac' combines the two genotypes into IUPAC nucleotide code, \
-#	'major' takes the first (major) base and 'random' picks a random base of the two.", type = str, default = 'random')
-#parser.add_argument("-i", "--id_file", help = "An optional input file containing the ID (names) of each individual on a single \
-#	line", type = str)
-#parser.add_argument("-m", "--subtitutionModel", help = "The type of substitution model to use in the RAxML run. \
-#	See RAxML help page for all the possible models that can be run", type = str, default = 'GTRGAMMA')
-#
-#args = parser.parse_args()
-#
-#infile = args.input_file
-infile = "genotypes.subset.txt"
+parser = argparse.ArgumentParser()
+parser.add_argument("input_file", help = "Path to the genotype file", type = str)
 
-#geno_method = args.genotype
-geno_method = 'major'
+parser.add_argument("-g", "--genotype", help = "A method that takes the 2 base pair genotype and turns it into a single \
+	base pair genotype. Options: 'iupac', 'major', 'random'. 'iupac' combines the two genotypes into IUPAC nucleotide code, \
+	'major' takes the first (major) base and 'random' picks a random base of the two. Default: 'major'", type = str, default = 'major')
+parser.add_argument("-i", "--id_file", help = "An optional input file containing the ID (names) of each individual on a single \
+	line", type = str)
+parser.add_argument("-m", "--substitutionModel", help = "The type of substitution model to use in the RAxML run. \
+	See RAxML help page for all the possible models that can be run. Default: 'GTRGAMMA'", type = str, default = 'GTRGAMMA')
+parser.add_argument("-r", "--run_name", help = "An optional name for the RAxML output run", type = str)
 
-#id_file = args.id_file
-id_file = "names.txt"
+args = parser.parse_args()
 
-#model = args.substitutionModel
-model = 'GTRGAMMA'
+infile = args.input_file
+#infile = "genotypes.subset.txt"
+
+geno_method = args.genotype
+#geno_method = 'major'
+
+id_file = args.id_file
+#d_file = 'names.txt'
+#id_file = None
+
+model = args.substitutionModel
+#model = 'GTRGAMMA'
+
+run_name = args.run_name
+if run_name == None:
+	tmp = infile.rsplit('.', 1)
+	run_name = tmp[0] + '.' + geno_method
 
 ####################################################################
 class Geno_Snp(object):
@@ -112,8 +120,9 @@ class Fasta_builder(object):
 		# if no id_file given at command line, create own names
 		if id_file == None:
 			i = 1
-			for i in range(len(snps)+1):
+			for ind in range(len(snps)):
 				names.append(">Individual" + str(i))
+				i += 1
 		# raise error if id_file given but the file does not exist
 		elif not os.path.exists(id_file):
 			raise IOError("Specified id_file does not exist")
@@ -148,10 +157,8 @@ class Raxml_commander(object):
 	extension. Type 'raxmlHPC-AVX -h' in a terminal for more information and help.
 	"""
 	def __init__(self, in_fasta, model):
-		tmp = infile.rsplit('.', 1)
-		out_name = tmp[0] + '.' + geno_method
 		self.raxml_comm_line = "raxmlHPC-AVX -f a -x 12345 -p 12345 -# autoMRE -s " + in_fasta + " -m " + model \
-		+ " -n " + out_name
+		+ " -n " + run_name
 
 	def run_raxml(self, comm_line):
 		"""Execute the raxml command"""
@@ -173,3 +180,15 @@ print run.raxml_comm_line
 
 #Run raxml
 run.run_raxml(run.raxml_comm_line)
+
+#Extract the best tree from the raxml run
+dir_list = os.listdir("./")
+for file in dir_list:
+	if "RAxML_bipartitions."+run_name in file:
+		tree_file = file
+		break
+
+#Import the tree using the Phylo module from biopython and display the tree
+tree_handle = open(tree_file, 'r')
+tree = Phylo.read(tree_handle, "newick")
+Phylo.draw(tree)
