@@ -56,7 +56,7 @@ geno_method = args.genotype
 #geno_method = 'major'
 
 id_file = args.id_file
-#d_file = 'names.txt'
+#id_file = 'names.txt'
 #id_file = None
 
 model = args.substitutionModel
