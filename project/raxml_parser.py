@@ -35,7 +35,7 @@ except ImportError:
 	raise "Biopython is required but it does not seem to be installed. Please install it."
 
 ########################################################################
-"""Parse arguments """
+#Parse arguments
 parser = argparse.ArgumentParser()
 parser.add_argument("input_file", help = "Path to the genotype file", type = str)
 
