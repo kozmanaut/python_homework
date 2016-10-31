@@ -13,9 +13,10 @@ This parser works for the latest release of RAxML: v8.2.9.
 Get RAxML from: https://github.com/stamatak/standard-RAxML
 Website with manual: http://sco.h-its.org/exelixis/web/software/raxml/index.html
 
-On Uppmax, load RAxMl with:
+On Uppmax:
 $ module load bioinfo-tools
-$ module load raxml/8.2.4-gcc-mpi
+$ module load raxml
+$ module load biopython
 
 Command line usage:
 raxml_parser.py [-h] (optional: [-g geno_method] [-i id_file] [-m subsitutionModel] [-r RAxML_run_name])  'input_file'
